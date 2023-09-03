@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener Tool</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+              background-image: url(https://media.istockphoto.com/id/1533731914/vector/utilize-url-shortener-technology-and-generators-to-optimize-web-links-maximize-online-impact.jpg?s=2048x2048&w=is&k=20&c=mGi_8e-p6YrwHxAImGkP49prBOEgtvhzOU3bTqyo2Uw=);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        #urlInput {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #007BFF;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        #shortenButton {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        #shortenButton:hover {
+            background-color: #0056b3;
+        }
+
+        #shortenedURL {
+            margin-top: 20px;
+            word-break: break-all;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener Tool</h1>
+        <input type="text" id="urlInput" placeholder="Enter a URL">
+        <button id="shortenButton">Shorten</button>
+        <div id="shortenedURL"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const urlInput = document.getElementById('urlInput');
+            const shortenButton = document.getElementById('shortenButton');
+            const shortenedURL = document.getElementById('shortenedURL');
+
+            shortenButton.addEventListener('click', function () {
+                const url = urlInput.value;
+                if (url) {
+                    fetch(`https://api.shrtco.de/v2/shorten?url=${encodeURIComponent(url)}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.ok) {
+                                shortenedURL.innerHTML = `<p>Shortened URL:</p><a href="${data.result.full_short_link}" target="_blank">${data.result.full_short_link}</a>`;
+                            } else {
+                                shortenedURL.innerHTML = '<p>Invalid URL. Please try again.</p>';
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            shortenedURL.innerHTML = '<p>An error occurred. Please try again later.</p>';
+                        });
+                } else {
+                    shortenedURL.innerHTML = '<p>Please enter a URL to shorten.</p>';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
